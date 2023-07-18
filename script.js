@@ -7,22 +7,20 @@ const loader = document.getElementById('loader');
 
 let apiQuotes = [];
 
-// Show Loading
-function loading() {
+function showLoadingSpinner() {
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
-// Hide Loading
-function complete() {
+function removeLoadingSpinner() {
     quoteContainer.hidden = false;
     loader.hidden = true;
 }
 
 // Show New Quote
 function newQuote() {
-    loading();
-    // Pick a random quote from api quotes array
+    showLoadingSpinner();
+    // Pick a random quote from API quotes array
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
     // Check if Author field is blank and replace it with 'Anonymous'
     if (!quote.author) {
@@ -36,31 +34,29 @@ function newQuote() {
     } else {
         quoteText.classList.remove('long-quote');
     }
-        // Set Quote, Hide Loader
+        // Set Quote, Hide Loader Spinner
     quoteText.textContent = quote.text;
-    complete();
+    removeLoadingSpinner();
 }
 
 // Get Quotes From API
 async function getQuotes() {
-    loading();
+    showLoadingSpinner();
     const apiUrl = 'https://jacintodesign.github.io/quotes-api/data/quotes.json';
     try {
         const response = await fetch(apiUrl);
         apiQuotes = await response.json();
         newQuote();
     } catch (err) {
-        // Catch Error Here
+        console.log(err); // Catch Error Here
     }
 }
 
-// Tweet Quote
 function tweetQuote() {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`;
     window.open(twitterUrl, '_blank');
 }
 
-// Event Listeners
 newQuoteBtn.addEventListener('click', newQuote);
 twitterBtn.addEventListener('click', tweetQuote);
 
